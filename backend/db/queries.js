@@ -15,15 +15,13 @@ function createUser(req, res, next) {
       });
     })
     .catch(err => {
-      res.status(500).json({
-        message: err
-      });
+      next(err);
     });
 }
 
 function logoutUser(req, res, next) {
   req.logout();
-  res.status(200).send("log out success");
+  res.status(200).json({ message: "log out success" });
 }
 
 function loginUser(req, res) {
