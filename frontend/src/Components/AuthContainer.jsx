@@ -1,5 +1,7 @@
 import React from 'react'
 import axios from 'axios';
+import { connect } from "react-redux";
+import { loginUser } from "../actions/authActions";
 
 import Login from './Auth/Login';
 import Signup from './Auth/Signup';
@@ -8,46 +10,27 @@ import Signup from './Auth/Signup';
 // Make POST req to backend to signup
 // When? -> User fills out the form & click signup button 
 // Check if they typed username and password  
-
-class Auth extends React.Component {
+class AuthContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // formToDisplay: "Signup", // "Signup" || "Login"
       loginDisplay: false,
       username: '',
       password: '',
     }
   }
 
-  loginUser = () => {
-    const { username, password } = this.state;
-    axios.post('/users/login', {username, password})
-      .then(res => {
-        const user = res.data;
-        this.props.setLoggedInUser(user);
-      })
-      .catch(err => {
-        console.log("Error:", err);
-      })
-  }
 
   handleLogin = (e) => {
     e.preventDefault();
-    this.loginUser();
+    const { username, password } = this.state;
+    this.props.loginUser({
+      username,
+      password,
+    });
   }
 
   handleSignup = (e) => {
-    const { username, password } = this.state;
-    e.preventDefault();
-    // Make NET request
-    axios.post('/users/new', {username, password})
-      .then(res => {
-        this.loginUser();
-      })
-      .catch(err => {
-        console.log("Error:", err);
-      })
   }
 
   toggleForm = () => {
@@ -65,6 +48,7 @@ class Auth extends React.Component {
   }
 
   render() {
+    console.log('AutoContainer props =>', this.props);
     const { username, password } = this.state;
     return (
       <div>
@@ -89,4 +73,18 @@ class Auth extends React.Component {
     )
   }
 }
-export default Auth;
+
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginUser: (userCredentials) => dispatch(
+      loginUser(userCredentials)
+    )
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AuthContainer);

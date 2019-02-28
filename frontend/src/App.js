@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Route, Link, Switch } from "react-router-dom";
 
 import Profile from './Components/Profile';
-import Auth from './Components/Auth';
+import Auth from './Components/AuthContainer';
 import PrivateRoute from './Components/Auth/PrivateRoute';
 import axios from "axios";
 
@@ -31,19 +31,9 @@ class App extends Component {
     this.isUserLoggedInTheBackend();
   }
 
-  setLoggedInUser = (user) => {
-    this.setState({
-      user: user,
-      userLoggedIn: true
-    })
-  }
-
   renderAuth = (routeProps) => {
     return (
-      <Auth 
-        setLoggedInUser={this.setLoggedInUser}
-        {...routeProps}
-      />
+      <Auth {...routeProps} />
     )
   }
 
